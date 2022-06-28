@@ -7,6 +7,19 @@
     <title>Document</title>
 </head>
 <body>
-    <script src="./main.js"></script>
+    <h1>Bienvenido, agrega productos que te quieras llevar!</h1>
+    <!-- Idea poner nombre de paciente que ingresa en el alert -->
+    <form>
+        <label for="producto">Producto</label><br>
+        <input type="text" id="inputProducto" name="producto" placeholder="Ingresa un producto"><br>
+        <label for="cantidad">Cantidad</label><br>
+        <input type="number" id="inputCantidad" name="cantidad" placeholder="Ingresa la cantidad deseada"><br>
+        <input type="button" id="btnAgregar" value="Agregar">
+    </form> 
+    <!-- <div id="contenedor">
+    </div> -->
+    <ul id="contenedor"></ul>
+    <!-- <script src="./main.js"></script> -->
+    <script src="./carrito.js"></script>
 </body>
 </html>
