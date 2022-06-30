@@ -11,7 +11,7 @@ function agregarProducto(producto, cantidad){
     // "Hola, esto es un string" --> "hola" + producto + "esto es un string"
     // 'Hola, esto es un string'
 
-    html =  "El producto es " + producto + " seleccionaste " + cantidad + " unidades";
+    html =  "<li> El producto es " + producto + " seleccionaste " + cantidad + " unidades </li>";
 
 
     contenedor.innerHTML += html;
