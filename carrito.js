@@ -1,13 +1,27 @@
 // Obtenemos los elementos de html.
 let inputProducto = document.getElementById("inputProducto");
-const selectCantidad = document.getElementById("selectCantidad");
 const contenedor = document.querySelector("#contenedor");
 const contenedorProductos = document.getElementById("contenedorProductos");
 
+//Creamos el html con las cosas que nos envian por parametro.
+function agregarProducto(producto, cantidad){
+    let html;
+    // `Hola, esto es un string` --> `Hola ${producto} es un string`
+    // "Hola, esto es un string" --> "hola" + producto + "esto es un string"
+    // 'Hola, esto es un string'
+
+    html =  "<li>El producto es " + producto.nombreProducto + " seleccionaste " + cantidad + " unidades. El precio total es de $" + cantidad*producto.precio  + "</li>";
+
+
+    contenedor.innerHTML += html;
+}
+
 function agregarAlCarrito(id) {
-    console.log("Agregando")
     let productoAgregar = stock.find(element => element.id == id);
-    console.log(productoAgregar);
+
+    let selectCantidad = document.getElementById(`selectCantidad${id}`);
+
+    agregarProducto(productoAgregar, selectCantidad.options[selectCantidad.selectedIndex].text)
 }
 
 function mostrarProductos(listaDeProductos){
@@ -22,11 +36,11 @@ function mostrarProductos(listaDeProductos){
             <p class="card-text">${element.presentación} </p>
             <p class="card-text">$${element.precio}</p>
                 <label for="unidades" class="form-label">Unidades que queres llevar</label>
-                <select class="form-select" aria-label="select unidades" id="selectCantidad">
-                <option selected>x1</option>
-                <option value="1">Pack de 10</option>
-                <option value="2">Pack de 25</option>
-                <option value="3">Pack de 100</option>
+                <select class="form-select" aria-label="select unidades" id="selectCantidad${element.id}">
+                <option selected>1</option>
+                <option value="1">10</option>
+                <option value="2">25</option>
+                <option value="3">100</option>
             </select>
             <br>
             <a class="btn btn-primary" id="btnAgregar${element.id}">Agregar</a>  
@@ -35,37 +49,22 @@ function mostrarProductos(listaDeProductos){
         </div>`;
 
         contenedorProductos.innerHTML+=html;
-    
-        let btnAgregarId = document.getElementById(`btnAgregar${element.id}`);
+    });
+
+    listaDeProductos.forEach((producto) => {
+        let btnAgregarId = document.getElementById(`btnAgregar${producto.id}`);
         btnAgregarId.addEventListener("click", () => {
-            agregarAlCarrito(element.id)
-        }) 
+            agregarAlCarrito(producto.id);
+        });
     });
 }
 
-
-
-
 mostrarProductos(stock)
 
-//Creamos el html con las cosas que nos envian por parametro.
-function agregarProducto(producto, cantidad){
-    let html;
-    // `Hola, esto es un string` --> `Hola ${producto} es un string`
-    // "Hola, esto es un string" --> "hola" + producto + "esto es un string"
-    // 'Hola, esto es un string'
 
-    html =  "<li>El producto es " + producto + " seleccionaste " + cantidad + " unidades</li>";
-
-
-    contenedor.innerHTML += html;
-}
-
-
-// Accion de click.inputProducto.value
+ //Accion de click.inputProducto.value
 // btnAgregar.addEventListener("click", () => {
-   
 //     agregarProducto(inputProducto.textContent, selectCantidad.options[selectCantidad.selectedIndex].text);
-// })
+//  })
 
 
