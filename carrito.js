@@ -2,6 +2,14 @@
 let inputProducto = document.getElementById("inputProducto");
 const contenedor = document.querySelector("#contenedor");
 const contenedorProductos = document.getElementById("contenedorProductos");
+let divCarrito = document.getElementById("carrito");
+let carritoProductosAgregados = [];
+
+//funcion constructora
+function Producto(precio, cantidad) {
+    this.precio = precio
+    this.cantidad = cantidad
+}
 
 //Creamos el html con las cosas que nos envian por parametro.
 function agregarProducto(producto, cantidad){
@@ -10,10 +18,22 @@ function agregarProducto(producto, cantidad){
     // "Hola, esto es un string" --> "hola" + producto + "esto es un string"
     // 'Hola, esto es un string'
 
-    html =  "<li>El producto es " + producto.nombreProducto + " seleccionaste " + cantidad + " unidades. El precio total es de $" + cantidad*producto.precio  + "</li>";
-
+    html =  "<li>El producto es <b>" + producto.nombreProducto + "</b> seleccionaste " + cantidad + " unidades. El precio subtotal es de $" + cantidad*producto.precio  + " <a class='btn btn-danger btn-sm' id='botonEliminar'><i class='bi bi-trash-fill'></i></a> </li>";
 
     contenedor.innerHTML += html;
+
+    let productoAAgregar = new Producto(producto.precio, cantidad);
+    carritoProductosAgregados.push(productoAAgregar)
+    mostrarTotal(carritoProductosAgregados)
+}
+
+function mostrarTotal(carritoFinal){
+    let total = 0;
+    carritoFinal.forEach(producto => {
+        total = total + producto.precio * producto.cantidad
+    });
+
+    divCarrito.innerHTML = `<b>El total del carrito es de $${total} </b>`
 }
 
 function agregarAlCarrito(id) {
@@ -55,16 +75,14 @@ function mostrarProductos(listaDeProductos){
         let btnAgregarId = document.getElementById(`btnAgregar${producto.id}`);
         btnAgregarId.addEventListener("click", () => {
             agregarAlCarrito(producto.id);
+            Toastify({
+                text: "Agregaste " + producto.nombreProducto + " al carrito. Que lo disfrutes!",
+                duration: 3000,
+                destination: "/#carrito"
+              }).showToast();
         });
     });
 }
 
 mostrarProductos(stock)
-
-
- //Accion de click.inputProducto.value
-// btnAgregar.addEventListener("click", () => {
-//     agregarProducto(inputProducto.textContent, selectCantidad.options[selectCantidad.selectedIndex].text);
-//  })
-
-
+mostrarTotal(carritoProductosAgregados)
