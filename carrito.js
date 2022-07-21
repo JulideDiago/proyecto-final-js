@@ -1,39 +1,65 @@
+
 // Obtenemos los elementos de html.
-let inputProducto = document.getElementById("inputProducto");
+const inputProducto = document.getElementById("inputProducto");
 const contenedor = document.querySelector("#contenedor");
 const contenedorProductos = document.getElementById("contenedorProductos");
-let divCarrito = document.getElementById("carrito");
+const contadorCarrito = document.getElementById("contadorCarrito");
+const precioTotal = document.getElementById("precioTotal");
 let carritoProductosAgregados = [];
+let stock = [];
+
+importarStock();
+
+function importarStock() {
+    const url = 'stock.json';
+    const peticion = fetch('stock.json');
+
+    peticion.then(resp => {
+        return resp.json();
+    }).then(data => {
+        mostrarProductos(data);
+        stock = data;
+    })
+        .catch(console.warn);
+}
 
 //funcion constructora
-function Producto(precio, cantidad) {
-    this.precio = precio
+function Producto(producto, cantidad) {
+    this.id = producto.id
+    this.precio = producto.precio
     this.cantidad = cantidad
 }
 
-//Creamos el html con las cosas que nos envian por parametro.
 function agregarProducto(producto, cantidad){
     let html;
-    // `Hola, esto es un string` --> `Hola ${producto} es un string`
-    // "Hola, esto es un string" --> "hola" + producto + "esto es un string"
-    // 'Hola, esto es un string'
+    let productoAAgregar = new Producto(producto, cantidad);
 
-    html =  "<li>El producto es <b>" + producto.nombreProducto + "</b> seleccionaste " + cantidad + " unidades. El precio subtotal es de $" + cantidad*producto.precio  + " <a class='btn btn-danger btn-sm' id='botonEliminar'><i class='bi bi-trash-fill'></i></a> </li>";
+    html = `<li>El producto es <b> ${producto.nombreProducto}</b> <p id="cantidad${productoAAgregar.id}"> seleccionaste ${productoAAgregar.cantidad} unidades.</p> El precio de cada unidad es: $ ${productoAAgregar.precio} <a class='btn btn-danger btn-sm' id='botonEliminar${productoAAgregar.id}'><i class='bi bi-trash-fill'></i></a> </li>`;
 
     contenedor.innerHTML += html;
+    carritoProductosAgregados.push(productoAAgregar);
 
-    let productoAAgregar = new Producto(producto.precio, cantidad);
-    carritoProductosAgregados.push(productoAAgregar)
-    mostrarTotal(carritoProductosAgregados)
-}
+    carritoProductosAgregados.forEach((producto) => {
+        let btnEliminar= document.getElementById(`botonEliminar${producto.id}`);
 
-function mostrarTotal(carritoFinal){
-    let total = 0;
-    carritoFinal.forEach(producto => {
-        total = total + producto.precio * producto.cantidad
+        btnEliminar.addEventListener("click", () => {
+            eliminarProducto(btnEliminar, producto);
+        });
     });
 
-    divCarrito.innerHTML = `<b>El total del carrito es de $${total} </b>`
+    actualizarCarrito();
+}
+
+function eliminarProducto(btnEliminar, productoAAgregar) {
+    if(productoAAgregar.cantidad == 1){
+        btnEliminar.parentElement.remove()
+        carritoProductosAgregados = carritoProductosAgregados.filter(item => item.id !== productoAAgregar.id)
+        actualizarCarrito()
+    } else {
+        productoAAgregar.cantidad = productoAAgregar.cantidad - 1
+        document.getElementById(`cantidad${productoAAgregar.id}`).innerHTML = `<p id="cantidad${productoAAgregar.id}">seleccionaste ${productoAAgregar.cantidad} unidades</p>`
+        actualizarCarrito()
+    }
 }
 
 function agregarAlCarrito(id) {
@@ -84,5 +110,6 @@ function mostrarProductos(listaDeProductos){
     });
 }
 
-mostrarProductos(stock)
-mostrarTotal(carritoProductosAgregados)
+function actualizarCarrito(){
+    precioTotal.innerText = carritoProductosAgregados.reduce((acumulador, elemento)=> acumulador + (elemento.precio * elemento.cantidad), 0);
+ }
