@@ -1,0 +1,28 @@
+#titulo {
+color:green;
+font-size: 40px;
+font-style: oblique;
+}
+#inputProducto {
+color: green;
+font-style: italic;
+font-weight: bold;
+font-size: 20px;
+}
+#precio {
+ color:#107843;
+ font-weight: bold;
+}
+#descripcion {
+    color: #107843;
+    font-style: oblique;
+}
+#card-img-top {
+    margin-top: 20px;
+}
+#presentacion {
+ color:#084023;
+}
+#carrito {
+color: #034724;
+}
